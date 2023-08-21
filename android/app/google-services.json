@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "157536481487",
+    "project_id": "mynote-first-proje",
+    "storage_bucket": "mynote-first-proje.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157536481487:android:5de171980f74e9b314c7ba",
+        "android_client_info": {
+          "package_name": "com.dimoxo.mynotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "157536481487-kq8lfo9ja0e74cmgcu5qf2bfocrgkbfu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD24E0PkTdnZMaDUjIP-WKcJEkpw657DPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157536481487-kq8lfo9ja0e74cmgcu5qf2bfocrgkbfu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
