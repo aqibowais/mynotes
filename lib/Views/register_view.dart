@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
+// import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/Views/constants/routes.dart';
+import 'package:mynotes/Views/login_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -63,19 +66,38 @@ class _RegisterViewState extends State<RegisterView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  final userCredential = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: email, password: password);
-                  devtools.log(userCredential.toString());
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: email, password: password);
+                  // final user = FirebaseAuth.instance.currentUser;
+                  // await user?.sendEmailVerification();
+                  // devtools.log(userCredential.toString());
+                  Navigator.of(context).pushNamed(verifyEmailRoute);
                 } on FirebaseAuthException catch (e) {
                   // print('Caught an exception: ${e.code}');
                   if (e.code == 'invalid-email') {
-                    devtools.log('Invalid email format');
+                    // devtools.log('Invalid email format');
+                    await showErrorDialog(
+                      context,
+                      'Invalid email format',
+                    );
                   } else if (e.code == 'weak-password') {
-                    devtools.log('weak password');
+                    // devtools.log('weak password');
+                    await showErrorDialog(
+                      context,
+                      'weak password',
+                    );
                   } else if (e.code == 'email-already-in-use') {
-                    devtools.log('email already in use');
+                    // devtools.log('email already in use');
+                    await showErrorDialog(
+                      context,
+                      'email already in use',
+                    );
                   }
+                } catch (e) {
+                  await showErrorDialog(
+                    context,
+                    'Error: ${e.toString()}',
+                  );
                 }
               }),
           TextButton(
