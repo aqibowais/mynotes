@@ -1,4 +1,6 @@
 //Now we implement a concreate class of our auth provider
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mynotes/firebase_options.dart';
 import 'package:mynotes/service/auth/auth_user.dart';
 import 'package:mynotes/service/auth/auth_provider.dart';
 import 'package:mynotes/service/auth/auth_exceptions.dart';
@@ -25,7 +27,7 @@ class FirebaseAuthProvider implements AuthProvider {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
-        throw InvaliddEmailAuthException();
+        throw InvalidEmailAuthException();
       } else if (e.code == 'weak-password') {
         throw WeakPasswordAuthException();
       } else if (e.code == 'email-already-in-use') {
@@ -95,5 +97,12 @@ class FirebaseAuthProvider implements AuthProvider {
     } else {
       throw UserNotLoggedInAuthException();
     }
+  }
+
+  @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 }

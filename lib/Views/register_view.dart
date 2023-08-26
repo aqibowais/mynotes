@@ -1,9 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/Constants/routes.dart';
 import 'package:mynotes/Utilities/show_error_dialog.dart';
+import 'package:mynotes/service/auth/auth_exceptions.dart';
+import 'package:mynotes/service/auth/auth_service.dart';
 // import 'dart:developer' as devtools show log;
 
 // import 'package:mynotes/Views/login_view.dart';
@@ -62,45 +63,44 @@ class _RegisterViewState extends State<RegisterView> {
             ),
           ),
           TextButton(
-              child: const Text('Register'),
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                try {
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                      email: email, password: password);
-                  // final user = FirebaseAuth.instance.currentUser;
-                  // await user?.sendEmailVerification();
-                  // devtools.log(userCredential.toString());
-                  Navigator.of(context).pushNamed(verifyEmailRoute);
-                } on FirebaseAuthException catch (e) {
-                  // print('Caught an exception: ${e.code}');
-                  if (e.code == 'invalid-email') {
-                    // devtools.log('Invalid email format');
-                    await showErrorDialog(
-                      context,
-                      'Invalid email format',
-                    );
-                  } else if (e.code == 'weak-password') {
-                    // devtools.log('weak password');
-                    await showErrorDialog(
-                      context,
-                      'weak password',
-                    );
-                  } else if (e.code == 'email-already-in-use') {
-                    // devtools.log('email already in use');
-                    await showErrorDialog(
-                      context,
-                      'email already in use',
-                    );
-                  }
-                } catch (e) {
-                  await showErrorDialog(
-                    context,
-                    'Error: ${e.toString()}',
-                  );
-                }
-              }),
+            child: const Text('Register'),
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+              try {
+                await AuthService.firebase().createUser(
+                  email: email,
+                  password: password,
+                );
+
+                // final user = FirebaseAuth.instance.currentUser;
+                // await user?.sendEmailVerification();
+                // devtools.log(userCredential.toString());
+                AuthService.firebase().sendEmailVerification();
+                Navigator.of(context).pushNamed(verifyEmailRoute);
+              } on InvalidEmailAuthException {
+                await showErrorDialog(
+                  context,
+                  'Invalid email format',
+                );
+              } on WeakPasswordAuthException {
+                await showErrorDialog(
+                  context,
+                  'weak password',
+                );
+              } on EmailAlreadyInUseAuthException {
+                await showErrorDialog(
+                  context,
+                  'email already in use',
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  'Failed to register',
+                );
+              }
+            },
+          ),
           TextButton(
               //now we create a named route to ink b/w login and register view
               onPressed: () {

@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:mynotes/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/Constants/routes.dart';
 import 'package:mynotes/Views/login_view.dart';
 import 'package:mynotes/Views/notes_view.dart';
 import 'package:mynotes/Views/register_view.dart';
 import 'package:mynotes/Views/verify_email_view.dart';
-import 'package:mynotes/firebase_options.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized;
@@ -36,17 +34,15 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
+        future: AuthService.firebase().initialize(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               // return const LoginView();correct but not good enough,below is the good approach
 
-              final user = FirebaseAuth.instance.currentUser;
+              final user = AuthService.firebase().currentUser;
               if (user != null) {
-                if (user.emailVerified) {
+                if (user.isEmailVerified) {
                   // print('Email is Verified');
                   return const NotesView();
                 } else {
