@@ -98,14 +98,17 @@ class MockAuthProvider implements AuthProvider {
 
   @override
   Future<AuthUser> logIn({
-    required String email,
+    required String? email,
     required String password,
   }) async {
     if (!isinitialized) throw NotInitializedAuthException();
     if (email == 'foo@bar.com') throw UserNotFoundAuthException();
     if (password == 'foobar') throw WrongPasswordAuthException();
     //specific email password test(mocking and testing)
-    const user = AuthUser(isEmailVerified: false);
+    const user = AuthUser(
+      isEmailVerified: false,
+      email: '',
+    );
     _user = user;
     return Future.value(_user);
   }
@@ -123,7 +126,10 @@ class MockAuthProvider implements AuthProvider {
     if (!isinitialized) throw NotInitializedAuthException();
     final user = _user;
     if (user == null) throw UserNotFoundAuthException();
-    const newUser = AuthUser(isEmailVerified: true);
+    const newUser = AuthUser(
+      isEmailVerified: true,
+      email: '',
+    );
     _user = newUser;
   }
 }

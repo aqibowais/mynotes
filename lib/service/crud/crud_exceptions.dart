@@ -1,4 +1,4 @@
-// 2nd part of original file 
+// 2nd part of original file
 //creating exception
 class DatabaseeAlreadyOpenException implements Exception {}
 

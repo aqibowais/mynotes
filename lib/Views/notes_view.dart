@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/Constants/routes.dart';
 import 'package:mynotes/enums/menu_action.dart';
 import 'package:mynotes/service/auth/auth_service.dart';
+import 'package:mynotes/service/crud/notes_service.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -11,6 +12,26 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  late final NotesService _notesService;
+//making sure the if the user is in notes view then it should have an email,bcz we need an email to get or create user in database
+  String get userEmail =>
+      AuthService.firebase().currentUser!.email!; //as email is optional
+
+//now using notesservices open close func.
+  @override
+  void initState() {
+    //notesservice should be siingleton bcz on restarting the app it was going to kill as noteservice is creating its copies
+    _notesService = NotesService();
+    // _notesService.open(); //now need for this,we added open function in all noteservice function
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _notesService.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +65,27 @@ class _NotesViewState extends State<NotesView> {
           })
         ],
       ),
-      body: const Text('Hello world'),
+      // body: const Text('Hello world'),//bcz of lec 29
+      body: FutureBuilder(
+        future: _notesService.getOrCreateuser(email: userEmail),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return StreamBuilder(
+                  stream: _notesService.allNotes,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Text('waiting for all notes...');
+                      default:
+                        return const CircularProgressIndicator();
+                    }
+                  });
+            default:
+              return const CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
 }
