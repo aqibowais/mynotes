@@ -1,10 +1,12 @@
+import 'package:mynotes/Views/Notes/new_notes_view.dart';
 import 'package:mynotes/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/Constants/routes.dart';
 import 'package:mynotes/Views/login_view.dart';
-import 'package:mynotes/Views/notes_view.dart';
+import 'package:mynotes/Views/Notes/notes_view.dart';
 import 'package:mynotes/Views/register_view.dart';
 import 'package:mynotes/Views/verify_email_view.dart';
+import 'package:path/path.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized;
@@ -13,7 +15,7 @@ void main() {
     MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
         //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         //   useMaterial3: true,
       ),
@@ -24,6 +26,7 @@ void main() {
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
+        newNoteRoute: (context) => const NewNoteView(),
       },
     ),
   );

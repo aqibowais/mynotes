@@ -29,13 +29,13 @@ const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
 
 //creating notes table
 const createNoteTable = '''
-        CREATE TABLE "note" (
+        CREATE TABLE IF NOT EXISTS "note" (
 	      "id"	INTEGER NOT NULL,
 	      "user_id"	INTEGER NOT NULL,
 	      "text"	TEXT,
 	      "is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
 	      FOREIGN KEY("user_id") REFERENCES "user"("id"),
-	      PRIMARY KEY("id" AUTOINCREMENT),
+	      PRIMARY KEY("id" AUTOINCREMENT)
       );''';
 
 //create and open our DB as notesService in order to connect our app with database
@@ -47,8 +47,8 @@ class NotesService {
   List<DatabaseNote> _notes = [];
 
   // making notesservice class a singleton
-  static final NotesService _shared = NotesService._shaaredInstance();
-  NotesService._shaaredInstance();
+  static final NotesService _shared = NotesService._sharedInstance();
+  NotesService._sharedInstance();
   factory NotesService() => _shared;
 
   //controlling the stream list of database notes
@@ -60,6 +60,7 @@ class NotesService {
 
   Future<DatabaseUser> getOrCreateuser({required String email}) async {
     try {
+      await _ensureDnIsOpen();
       final user = await getUser(email: email);
       return user;
     } on CouldNotFindUser {
@@ -276,7 +277,7 @@ class NotesService {
   Future<void> _ensureDnIsOpen() async {
     try {
       await open();
-    } on DatabaseeAlreadyOpenException {
+    } on DatabaseAlreadyOpenException {
       //empty
     }
   }
@@ -285,7 +286,7 @@ class NotesService {
   //this open func keep hold of..,it open the DB and gonna store it somewhere in our notesServie,so the other func in the future can read data from the DB
   Future<void> open() async {
     if (_db != null) {
-      throw DatabaseeAlreadyOpenException;
+      throw DatabaseAlreadyOpenException;
     }
     //try to getting the doc directory path
     try {

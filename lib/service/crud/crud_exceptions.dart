@@ -1,6 +1,6 @@
 // 2nd part of original file
 //creating exception
-class DatabaseeAlreadyOpenException implements Exception {}
+class DatabaseAlreadyOpenException implements Exception {}
 
 class UnableTogetDocumentsDirectory implements Exception {}
 
