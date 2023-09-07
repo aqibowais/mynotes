@@ -227,12 +227,12 @@ class NotesService {
       throw UserAlreadyExists();
     }
     //insert will return the id
-    final UserId = await db.insert(userTable, {
+    final userId = await db.insert(userTable, {
       emailColumn: email
           .toLowerCase(), //only insering through email bcz id is already primary key
     });
     return DatabaseUser(
-      id: UserId,
+      id: userId,
       email: email,
     );
   }
@@ -287,6 +287,7 @@ class NotesService {
   Future<void> open() async {
     if (_db != null) {
       throw DatabaseAlreadyOpenException;
+
     }
     //try to getting the doc directory path
     try {

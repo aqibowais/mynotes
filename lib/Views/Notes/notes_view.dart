@@ -35,7 +35,9 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        backgroundColor: Colors.brown[900],
         title: const Text('Main UI'),
         actions: [
           IconButton(
@@ -82,7 +84,7 @@ class _NotesViewState extends State<NotesView> {
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                      case ConnectionState.active://both cases fall through
+                      case ConnectionState.active: //both cases fall through
                         return const Text('waiting for all notes...');
                       default:
                         return const CircularProgressIndicator();

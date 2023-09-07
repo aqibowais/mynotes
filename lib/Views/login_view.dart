@@ -38,7 +38,9 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        backgroundColor: Colors.brown[900],
       ),
+      backgroundColor: Colors.grey[300],
       body: Column(
         children: [
           TextField(
@@ -84,26 +86,23 @@ class _LoginViewState extends State<LoginView> {
                     (route) => false,
                   );
                 }
-              }on UserNotFoundAuthException{
+              } on UserNotFoundAuthException {
                 await showErrorDialog(
-                    context,
-                    'User not found',
-                  );
-              }on WrongPasswordAuthException{
-                  await showErrorDialog(
-                    context,
-                    'Wrong Credentials',
-                  );
-                  }on GenericAuthException{
-                    await showErrorDialog(
-                    context,
-                    'Authentication error',
-                  );
-                  }
-                 
-              },
-              
-            
+                  context,
+                  'User not found',
+                );
+              } on WrongPasswordAuthException {
+                await showErrorDialog(
+                  context,
+                  'Wrong Credentials',
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  'Authentication error',
+                );
+              }
+            },
           ),
           TextButton(
               //now we create a named route to ink b/w login and register view

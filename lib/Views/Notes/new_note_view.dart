@@ -51,7 +51,7 @@ class _NewNoteViewState extends State<NewNoteView> {
     return await _notesService.createNote(owner: owner);
   }
 
-  void _deleteNoteIfTextEmplty() {
+  void _deleteNoteIfTextEmpty() {
     final note = _note;
     if (_textController.text.isEmpty && note != null) {
       _notesService.deleteNote(id: note.id);
@@ -61,7 +61,7 @@ class _NewNoteViewState extends State<NewNoteView> {
   void _saveNoteIfTextNotEmpty() async {
     final note = _note;
     final text = _textController.text;
-    if (note != null && _textController.text.isNotEmpty) {
+    if (note != null && text.isNotEmpty) {
       await _notesService.updateNote(
         note: note,
         text: text,
@@ -72,7 +72,7 @@ class _NewNoteViewState extends State<NewNoteView> {
 //when user click back button so it will dispose
   @override
   void dispose() {
-    _deleteNoteIfTextEmplty();
+    _deleteNoteIfTextEmpty();
     _saveNoteIfTextNotEmpty();
     _textController.dispose();
     super.dispose();
@@ -81,31 +81,31 @@ class _NewNoteViewState extends State<NewNoteView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Notes'),
-      ),
-      body: FutureBuilder(
-        future: createNewNote(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.active:
-              _note = snapshot.data as DatabaseNote;//error
-              // //snapshot data is of typer databasenote
-              _setUpTextcontrollerListener();
-              return TextField(
-                controller: _textController,
-                keyboardType: TextInputType.multiline,
-                //it will enable the next line key in keyboard
-                maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: 'Start Typing Your Note....',
-                ),
-              );
-            default:
-              return const CircularProgressIndicator();
-          }
-        },
-      ),
-    );
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          title: const Text('New Note'),
+          backgroundColor: Colors.brown[900],
+        ),
+        body: FutureBuilder(
+          future: createNewNote(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                // ignore: unnecessary_cast
+                _note = snapshot.data as DatabaseNote?;
+                _setUpTextcontrollerListener();
+                return  TextField(
+                  controller: _textController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: 'Start Typing Your Notes....',
+                    ),
+                );
+              default:
+                return const CircularProgressIndicator();
+            }
+          },
+        ));
   }
 }
